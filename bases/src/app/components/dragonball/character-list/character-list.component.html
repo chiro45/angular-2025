@@ -1,0 +1,22 @@
+<h3>{{listName()}}</h3>
+<ul>
+    @for(character of characters(); track character; let idx = $index ){
+    <!-- tradicional  *ngIg => no se ocmbina con ngfor -->
+    @if ((character.power > 500)) {
+
+    <li>
+        <span> {{idx+1 }} - {{character.name}}</span>:
+        <!-- condicional una clase sin ngClass -->
+        <strong [class.text-danger]="character.power > 8000"
+            [class.text-info]="character.power < 9000">({{character.power}})</strong>
+        <!-- 
+                    ngClass 
+                    <strong 
+                    [ngClass]="powerClasess()">({{character.power}})</strong> 
+                    -->
+    </li>
+    }@else {
+    <strong>Aqui no hay nadie</strong>
+    }
+    }
+</ul>

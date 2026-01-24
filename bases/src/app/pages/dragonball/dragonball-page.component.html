@@ -1,0 +1,38 @@
+<h1>DragobBall page</h1>
+<hr />
+
+<section class="row">
+    <div class="col-12 col-sm-6">
+        <h3>Agregar:</h3>
+        <input [value]="name()" (input)="name.set(txtName.value)" #txtName type="text" class="form-control"
+            placeholder="Nombre">
+        <input [value]="power()" (input)="power.set(+txtPower.value)" #txtPower type="number" class="form-control mt-2"
+            placeholder="Poder">
+        <button class="mt-2 btn btn-primary" (click)="addCharacter()">Agregar</button>
+    </div>
+
+    <div class="col-12 col-sm-6">
+        <h3>Listado de personajes fuertes</h3>
+        <ul>
+            @for(character of characters(); track character; let idx = $index ){
+            <!-- tradicional  *ngIg => no se ocmbina con ngfor -->
+            @if ((character.power > 500)) {
+
+            <li>
+                <span> {{idx+1 }} - {{character.name}}</span>:
+                <!-- condicional una clase sin ngClass -->
+                <strong [class.text-danger]="character.power > 8000"
+                    [class.text-info]="character.power < 9000">({{character.power}})</strong>
+                <!-- 
+                    ngClass 
+                    <strong 
+                    [ngClass]="powerClasess()">({{character.power}})</strong> 
+                    -->
+            </li>
+            }@else {
+            <strong>Aqui no hay nadie</strong>
+            }
+            }
+        </ul>
+    </div>
+</section>
