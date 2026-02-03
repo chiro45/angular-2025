@@ -19,7 +19,18 @@ export class GifService {
 
   // Estado reactivo con Signals
   trendingGifs = signal<Gif[]>([]);
-  trendingGifsLoading = signal(true);
+  trendingGifsLoading = signal(false);
+
+  trendingGifGroup = computed<Gif[][]>(()=>{
+    const  groups = []
+
+    for (let index = 0; index < this.trendingGifs().length; index+=3) {
+      groups.push(this.trendingGifs().slice(index , index+3))
+
+    }
+
+    return groups
+  })
 
   // Historial de búsquedas:
   // clave = query, valor = array de gifs
@@ -34,20 +45,25 @@ export class GifService {
   // ===============================
   // Gifs en tendencia
   // ===============================
+  private trendingPage = signal(0)
   loadTrendingGifs() {
+
+    if(this.trendingGifsLoading()) return
+    this.trendingGifsLoading.set(true)
     this.http
       .get<GiphyResponse>(`${environment.giphyUrl}/gifs/trending`, {
         params: {
           api_key: environment.giphyApikey,
           limit: 20,
+          offset: this.trendingPage() *20
         },
       })
       .subscribe((res) => {
         // Mapeamos la respuesta de Giphy a nuestro modelo Gif
         const gifs = GifMapper.mapGiphyItemToArray(res.data);
-
+        this.trendingPage.update((prev)=> prev+1)
         // Actualizamos el estado
-        this.trendingGifs.set(gifs);
+        this.trendingGifs.update((prev)=> [...prev, ...gifs]);
         this.trendingGifsLoading.set(false);
       });
   }

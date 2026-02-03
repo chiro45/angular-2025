@@ -10,5 +10,5 @@ import { Gif } from '../../interfaces/gif.interface';
 })
 export class GiftListComponent {
   gifs = input.required<Gif[]>()
-  
+
 }
